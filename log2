@@ -1,0 +1,86 @@
+elena@lenKa:~$ su
+Пароль: 
+root@lenKa:/home/elena# su - postgres
+postgres@lenKa:~$ psql mi_lena
+psql: ошибка: подключиться к серверу через сокет "/var/run/postgresql/.s.PGSQL.5432" не удалось: ВАЖНО:  база данных "mi_lena" не существует
+postgres@lenKa:~$ psql
+psql (15.6 (Debian 15.6-0+deb12u1))
+Введите "help", чтобы получить справку.
+
+postgres=# \l
+postgres=# create database base1
+postgres-# creste datebase basa1;
+ОШИБКА:  ошибка синтаксиса (примерное положение: ";")
+СТРОКА 2: creste datebase basa1;
+                               ^
+postgres=# create database base1;
+CREATE DATABASE
+postgres=# \q
+postgres@lenKa:~$ psql base1
+psql (15.6 (Debian 15.6-0+deb12u1))
+Введите "help", чтобы получить справку.
+
+base1=# create table users (user_id serial primary key, email varchar(255), name varchar(100), lastname varchar(100));
+CREATE TABLE
+base1=# \dt
+          Список отношений
+ Схема  |  Имя  |   Тип   | Владелец 
+--------+-------+---------+----------
+ public | users | таблица | postgres
+(1 строка)
+
+base1=# create table chats (chat_id serial primary key, chat_name varchar(100));
+CREATE TABLE
+base1=# create table mesagess (mesage_id serial primary key, mesage_text varchar(255), user_name varchar(100), chat_name varchar(100));
+CREATE TABLE
+base1=# select* from users;
+ user_id | email | name | lastname 
+---------+-------+------+----------
+(0 строк)
+
+base1=# nisert into users (email, name, lastname) values ('mi_lena2@mail.ru', 'elena', 'mikhailova'), ('lapsin@mail.ru', 'danila', 'lapshin');
+ОШИБКА:  ошибка синтаксиса (примерное положение: "nisert")
+СТРОКА 1: nisert into users (email, name, lastname) values ('mi_lena2@...
+          ^
+base1=# insert into users (email, name, lastname) values ('mi_lena2@mail.ru', 'elena', 'mikhailova'), ('lapsin@mail.ru', 'danila', 'lapshin');
+INSERT 0 2
+base1=# insert into chats (chat_name) values ('1'), ('2');
+INSERT 0 2
+base1=# select * from mesagess;
+ mesage_id | mesage_text | user_name | chat_name 
+-----------+-------------+-----------+-----------
+(0 строк)
+
+base1=# select * from users;
+ user_id |      email       |  name  |  lastname  
+---------+------------------+--------+------------
+       1 | mi_lena2@mail.ru | elena  | mikhailova
+       2 | lapsin@mail.ru   | danila | lapshin
+(2 строки)
+
+base1=# select * from users;insert into mesagess (mesage_text, user_name, chat_name) values ('hello', 'elena', '1'), ('bey', 'danila', '2'), ('ok', 'elena', '1');
+ user_id |      email       |  name  |  lastname  
+---------+------------------+--------+------------
+       1 | mi_lena2@mail.ru | elena  | mikhailova
+       2 | lapsin@mail.ru   | danila | lapshin
+(2 строки)
+
+INSERT 0 3
+base1=# select user_name, lastname, mesage_text, chat_id from users inner join mesagess on users.name = mesagess.user_name inner join chats on mesagess.chat_name = chats_name where name = 'elena' group by user_name;
+ОШИБКА:  столбец "chats_name" не существует
+СТРОКА 1: ...ser_name inner join chats on mesagess.chat_name = chats_name...
+                                                               ^
+ПОДСКАЗКА:  Возможно, предполагалась ссылка на столбец "mesagess.chat_name" или столбец "chats.chat_name".
+base1=# select user_name, lastname, mesage_text, chat_id from users inner join mesagess on users.name = mesagess.user_name inner join chats on mesagess.chat_name = chat_name where name = 'elena' group by user_name, lastname, mesage_text, chat_id;
+ОШИБКА:  неоднозначная ссылка на столбец "chat_name"
+СТРОКА 1: ...ser_name inner join chats on mesagess.chat_name = chat_name ...
+                                                               ^
+base1=# select user_name, lastname, mesage_text, chat_id from users inner join mesagess on users.name = mesagess.user_name inner join chats on mesagess.chat_name = chats.chat_name where name = 'elena' group by user_name,mesage_id, user_id, chat_id;
+ user_name |  lastname  | mesage_text | chat_id 
+-----------+------------+-------------+---------
+ elena     | mikhailova | hello       |       1
+ elena     | mikhailova | ok          |       1
+(2 строки)
+
+base1=# 
+

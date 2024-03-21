@@ -1,0 +1,106 @@
+elena@lenKa:~$ su
+Пароль: 
+root@lenKa:/home/elena# su - postgres
+postgres@lenKa:~$ psql
+psql (15.6 (Debian 15.6-0+deb12u1))
+Введите "help", чтобы получить справку.
+
+postgres=# create user lena with login password '1111';
+CREATE ROLE
+postgres=# create database mi_lena ovnerlena;
+ОШИБКА:  ошибка синтаксиса (примерное положение: ";")
+СТРОКА 1: create database mi_lena ovnerlena;
+                                           ^
+postgres=# create database mi_lena ownerlena;
+ОШИБКА:  ошибка синтаксиса (примерное положение: ";")
+СТРОКА 1: create database mi_lena ownerlena;
+                                           ^
+postgres=# create database mi_lena ovner lena;
+ОШИБКА:  параметр "ovner" не распознан
+СТРОКА 1: create database mi_lena ovner lena;
+                                  ^
+postgres=# create database mi_lena owner lena;
+CREATE DATABASE
+postgres=# ^C
+postgres=# ^C
+postgres=# 
+
+
+task2
+
+a@lenKa:~$ su
+Пароль: 
+root@lenKa:/home/elena# su - postgres
+postgres@lenKa:~$ psql
+psql (15.6 (Debian 15.6-0+deb12u1))
+Введите "help", чтобы получить справку.
+
+postgres=# create user lena with login password '1111';
+CREATE ROLE
+postgres=# create database mi_lena ovnerlena;
+ОШИБКА:  ошибка синтаксиса (примерное положение: ";")
+СТРОКА 1: create database mi_lena ovnerlena;
+                                           ^
+postgres=# create database mi_lena ownerlena;
+ОШИБКА:  ошибка синтаксиса (примерное положение: ";")
+СТРОКА 1: create database mi_lena ownerlena;
+                                           ^
+postgres=# create database mi_lena ovner lena;
+ОШИБКА:  параметр "ovner" не распознан
+СТРОКА 1: create database mi_lena ovner lena;
+                                  ^
+postgres=# create database mi_lena owner lena;
+CREATE DATABASE
+postgres=# ^C
+postgres=# ^C
+postgres=# \q
+postgres@lenKa:~$ psql mi_lena
+psql (15.6 (Debian 15.6-0+deb12u1))
+Введите "help", чтобы получить справку.
+
+mi_lena=# create table users (user_id serial primary key, email varchar(255), name varchar(100), lastname varchar(100));
+CREATE TABLE
+mi_lena=# \td
+неверная команда \td
+Введите \? для получения справки.
+mi_lena=# \dt
+          Список отношений
+ Схема  |  Имя  |   Тип   | Владелец 
+--------+-------+---------+----------
+ public | users | таблица | postgres
+(1 строка)
+
+mi_lena=# select * from users;
+ user_id | email | name | lastname 
+---------+-------+------+----------
+(0 строк)
+
+mi_lena=# insert into users (email, name, lastname) values ('dl@com', 'danya', 'lapshin'), ('milena@com', 'elena', 'mikhailova');
+INSERT 0 2
+mi_lena=# updata from users set email = 'dl@jmail.com' where name = 'danya';
+ОШИБКА:  ошибка синтаксиса (примерное положение: "updata")
+СТРОКА 1: updata from users set email = 'dl@jmail.com' where name = 'd...
+          ^
+mi_lena=# update from users set email = 'dl@jmail.com' where name = 'danya';
+ОШИБКА:  ошибка синтаксиса (примерное положение: "from")
+СТРОКА 1: update from users set email = 'dl@jmail.com' where name = 'd...
+                 ^
+mi_lena=# update users set email = 'dl@jmail.com' where name = 'danya';
+UPDATE 1
+mi_lena=# delete from users where name = 'elena'; 
+DELETE 1
+mi_lena=# 
+mi_lena=# \q
+postgres@lenKa:~$ psql
+psql (15.6 (Debian 15.6-0+deb12u1))
+Введите "help", чтобы получить справку.
+
+postgres=# drop database mi_lena;
+DROP DATABASE
+postgres=# drop users lena;
+ОШИБКА:  ошибка синтаксиса (примерное положение: "users")
+СТРОКА 1: drop users lena;
+               ^
+postgres=# drop user lena;
+DROP ROLE
+postgres=# 
