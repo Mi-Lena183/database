@@ -1,0 +1,128 @@
+lena@lenKa:~$ sudo systemctl start mongod
+[sudo] пароль для elena: 
+elena@lenKa:~$ mongosh
+Current Mongosh Log ID: 65fd4d5a7ff8bede5bdb83af
+Connecting to:          mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.0
+Using MongoDB:          7.0.6
+Using Mongosh:          2.2.0
+
+For mongosh info see: https://docs.mongodb.com/mongodb-shell/
+
+
+To help improve our products, anonymous usage data is collected and sent to MongoDB periodically (https://www.mongodb.com/legal/privacy-policy).
+You can opt-out by running the disableTelemetry() command.
+
+------
+   The server generated these startup warnings when booting
+   2024-03-22T12:20:00.065+03:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2024-03-22T12:20:02.444+03:00: Access control is not enabled for the database. Read and write access to data and configuration is unrestricted
+   2024-03-22T12:20:02.444+03:00: /sys/kernel/mm/transparent_hugepage/enabled is 'always'. We suggest setting it to 'never'
+   2024-03-22T12:20:02.444+03:00: vm.max_map_count is too low
+------
+
+test> db.createCollection('users'){'name': 'elena'}
+Uncaught:
+SyntaxError: Missing semicolon. (1:28)
+
+> 1 | db.createCollection('users'){'name': 'elena'}
+    |                             ^
+  2 |
+
+test> db.createCollection('users'){'name': 1}
+Uncaught:
+SyntaxError: Missing semicolon. (1:28)
+
+> 1 | db.createCollection('users'){'name': 1}
+    |                             ^
+  2 |
+
+test> db.createCollection('users')
+{ ok: 1 }
+test> db.users.insert({'name': 'elena'})
+DeprecationWarning: Collection.insert() is deprecated. Use insertOne, insertMany, or bulkWrite.
+{
+  acknowledged: true,
+  insertedIds: { '0': ObjectId('65fd533d7ff8bede5bdb83b0') }
+}
+test> db.users.insertOne({'name': 'elena'})
+{
+  acknowledged: true,
+  insertedId: ObjectId('65fd537f7ff8bede5bdb83b1')
+}
+test> db.users.insertOne({'age': '123'})
+{
+  acknowledged: true,
+  insertedId: ObjectId('65fd54277ff8bede5bdb83b2')
+}
+test> db.users.findOneAndUpdate({'age' '123'}. { $set: {'age': '44'}}
+Uncaught:
+SyntaxError: Unexpected token (1:33)
+
+> 1 | db.users.findOneAndUpdate({'age' '123'}. { $set: {'age': '44'}}
+    |                                  ^
+  2 |
+
+test> db.users.findOneAndUpdate({'age': '123'}, { $set: {'age': '44'}})
+{ _id: ObjectId('65fd54277ff8bede5bdb83b2'), age: '123' }
+test> db.users.find()
+[
+  { _id: ObjectId('65fd533d7ff8bede5bdb83b0'), name: 'elena' },
+  { _id: ObjectId('65fd537f7ff8bede5bdb83b1'), name: 'elena' },
+  { _id: ObjectId('65fd54277ff8bede5bdb83b2'), age: '44' }
+]
+test> db.users.replaceOne({'name': 'elena'}, {'name': 'milena'})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+test> db.users.findOneAndDelete({'age': '44'})
+{ _id: ObjectId('65fd54277ff8bede5bdb83b2'), age: '44' }
+test> db.users.find()
+[
+  { _id: ObjectId('65fd533d7ff8bede5bdb83b0'), name: 'milena' },
+  { _id: ObjectId('65fd537f7ff8bede5bdb83b1'), name: 'elena' }
+]
+test> db.mesagess.insertMany({'name': 'milena'}, {'mesage': 'hello!'})
+MongoInvalidArgumentError: Argument "docs" must be an array of documents
+test> db.mesagess.insertOne({'name': 'milena'})
+{
+  acknowledged: true,
+  insertedId: ObjectId('65fd5a937ff8bede5bdb83b3')
+}
+test> db.mesagess.insertOne({'Message': 'Hello!'})
+{
+  acknowledged: true,
+  insertedId: ObjectId('65fd5b3a7ff8bede5bdb83b4')
+}
+test> db.users.aggregate([{ $lookup: {from: 'mesagess', localFaild: 'name', foriegnField: 'name', as: 'mesage'}}])
+MongoServerError[FailedToParse]: unknown argument to $lookup: localFaild
+test> db.users.aggregate([{ $lookup: {from: 'mesagess', localFaild: 'name', foreignField: 'name', as: 'mesage'}}])
+MongoServerError[FailedToParse]: unknown argument to $lookup: localFaild
+test> db.users.aggregate([{ $lookup: {from: 'mesagess', localFaild: 'name', foreignField: 'name', as: 'mesage'}}])
+MongoServerError[FailedToParse]: unknown argument to $lookup: localFaild
+test> db.users.aggregate([{ $lookup: {from: 'mesagess', localFaild: 'name', foreignField: 'name', as: 'message'}}])
+MongoServerError[FailedToParse]: unknown argument to $lookup: localFaild
+test> db.users.aggregate([{ $lookup: {from: 'mesagess', localFaild: 'name', foreignField: 'name', as: 'message'}}])
+MongoServerError[FailedToParse]: unknown argument to $lookup: localFaild
+test> db.users.aggregate([{ $lookup: {from: 'mesagess', localField: 'name', foreignField: 'name', as: 'message'}}])
+[
+  {
+    _id: ObjectId('65fd533d7ff8bede5bdb83b0'),
+    name: 'milena',
+    message: [ { _id: ObjectId('65fd5a937ff8bede5bdb83b3'), name: 'milena' } ]
+  },
+  {
+    _id: ObjectId('65fd537f7ff8bede5bdb83b1'),
+    name: 'elena',
+    message: []
+  }
+]
+test> db.users.drop()
+true
+test> show collections
+mesagess
+test> exit
+
